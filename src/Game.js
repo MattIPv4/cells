@@ -14,6 +14,9 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
 }
 
 export class Game {
+    BORDER_RADIUS = 4;
+    GRID_GAP = 4;
+
     constructor(grid, fps = 5) {
         this.grid = grid;
 
@@ -46,16 +49,15 @@ export class Game {
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Draw the base grid
-        const gap = 2;
         for (let y = 0; y < this.grid.height; y++) {
             for (let x = 0; x < this.grid.width; x++) {
                 this.ctx.beginPath();
                 this.ctx.roundRect(
-                    x * size + gap,
-                    y * size + gap,
-                    size - gap * 2,
-                    size - gap * 2,
-                    4,
+                    x * size + this.GRID_GAP,
+                    y * size + this.GRID_GAP,
+                    size - this.GRID_GAP * 2,
+                    size - this.GRID_GAP * 2,
+                    this.BORDER_RADIUS,
                 );
                 this.ctx.fillStyle = 'rgb(30, 30, 40)';
                 this.ctx.fill();
@@ -64,29 +66,7 @@ export class Game {
 
         // Draw the cells
         for (const cell of this.grid.cells) {
-            this.ctx.beginPath();
-            this.ctx.roundRect(
-                cell.x * size,
-                cell.y * size,
-                size,
-                size,
-                4,
-            );
-            this.ctx.fillStyle = cell.color;
-            this.ctx.fill();
-
-            this.ctx.translate(cell.x * size + size * 0.5, cell.y * size + size * 0.5);
-            this.ctx.rotate(cell.dir * 0.5 * Math.PI);
-            this.ctx.translate(-1 * (cell.x * size + size * 0.5), -1 * (cell.y * size + size * 0.5));
-
-            this.ctx.beginPath();
-            this.ctx.moveTo(cell.x * size + size * 0.1, cell.y * size + size * 0.7);
-            this.ctx.lineTo(cell.x * size + size * 0.9, cell.y * size + size * 0.7);
-            this.ctx.lineTo(cell.x * size + size * 0.5, cell.y * size + size * 0.3);
-            this.ctx.fillStyle = 'rgb(255, 255, 255)';
-            this.ctx.fill();
-
-            this.ctx.setTransform(1, 0, 0, 1, 0, 0);
+            cell.render(this, size);
         }
     }
 

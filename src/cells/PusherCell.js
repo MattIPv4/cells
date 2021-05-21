@@ -1,13 +1,14 @@
 import { Cell } from './Cell';
+import { DirectionalCell } from './DirectionalCell';
 
-export class PusherCell extends Cell {
+export class PusherCell extends DirectionalCell {
     constructor(x = 0, y = 0, dir = 0) {
         super(x, y, dir);
         this.color = 'rgb(20, 100, 200)';
     }
 
     // A pusher cell can only be pushed in a direction not opposite to it
-    movementDirCheck(grid, sourceCell) { return sourceCell.dir !== this.dir && sourceCell.dir % 2 === this.dir % 2 }
+    movementDirCheck(grid, sourceCell) { return sourceCell.dir !== this.dir && sourceCell.dir % 2 === this.dir % 2; }
 
     incrementX(grid, sourceCell) {
         if (this.movementDirCheck(grid, sourceCell)) return false;

@@ -1,6 +1,6 @@
-import { Cell } from './Cell';
+import { DirectionalCell } from './DirectionalCell';
 
-export class DuplicatorCell extends Cell {
+export class DuplicatorCell extends DirectionalCell {
     constructor(x = 0, y = 0, dir = 0) {
         super(x, y, dir);
         this.color = 'rgb(200, 180, 20)';
@@ -24,7 +24,7 @@ export class DuplicatorCell extends Cell {
     }
 
     duplicateCell(grid, sourceCell) {
-        const newCell = new sourceCell.constructor(sourceCell.x, sourceCell.y, sourceCell.dir);
+        const newCell = sourceCell.duplicate();
         grid.cells.add(newCell);
         return newCell;
     }

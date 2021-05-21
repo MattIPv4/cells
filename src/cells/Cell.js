@@ -1,9 +1,25 @@
 export class Cell {
-    constructor(x = 0, y = 0, dir = 0) {
+    constructor(x = 0, y = 0) {
         this.x = x;
         this.y = y;
-        this.dir = dir;
         this.color = 'rgb(150, 150, 170)';
+    }
+
+    duplicate() {
+        return new this.constructor(this.x, this.y);
+    }
+
+    render(game, size) {
+        game.ctx.beginPath();
+        game.ctx.roundRect(
+            this.x * size,
+            this.y * size,
+            size,
+            size,
+            game.BORDER_RADIUS,
+        );
+        game.ctx.fillStyle = this.color;
+        game.ctx.fill();
     }
 
     update(grid) {

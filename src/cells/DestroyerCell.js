@@ -1,6 +1,7 @@
 import { Cell } from './Cell';
+import { DirectionalCell } from './DirectionalCell';
 
-export class DestroyerCell extends Cell {
+export class DestroyerCell extends DirectionalCell {
     constructor(x = 0, y = 0, dir = 0) {
         super(x, y, dir);
         this.color = 'rgb(200, 20, 20)';
