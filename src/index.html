@@ -29,23 +29,35 @@
         import { RotatorCell } from './cells/RotatorCell';
         import { ImmovableCell } from './cells/ImmovableCell';
         import { PusherCell } from './cells/PusherCell';
+        import { MoverCell } from './cells/MoverCell';
         import { DuplicatorCell } from './cells/DuplicatorCell';
         import { DestroyerCell } from './cells/DestroyerCell';
 
         new Game(new Grid(40, 20, new Set([
             new Cell(4, 5),
             new ImmovableCell(8, 5),
-            new PusherCell(10, 5, 1),
+            new MoverCell(13, 5, 1),
             new Cell(15, 5),
 
-            new Cell(14, 2),
-            new DuplicatorCell(15, 2, 1),
+            new Cell(15, 0),
+            new DuplicatorCell(15, 1, 2),
+            new PusherCell(14, 2, 1),
 
             new DestroyerCell(12, 1, 2),
+            new DestroyerCell(12, 4, 2),
 
-            new RotatorCell(5, 6),
+            new RotatorCell(5, 6, false),
             new DuplicatorCell(15, 7, 2),
-        ])));
+
+            new RotatorCell(20, 12, false),
+            new RotatorCell(20, 13, true),
+
+            new MoverCell(32, 15, 1),
+            new RotatorCell(30, 15),
+            new RotatorCell(33, 14),
+            new RotatorCell(34, 17),
+            new RotatorCell(31, 18),
+        ])), 10);
     </script>
 </body>
 </html>

@@ -26,12 +26,6 @@ export class Cell {
         // The default cell does nothing, it just exists
     }
 
-    rotatedClockwise() { return this.dir >= 3 ? 0 : this.dir + 1; }
-    rotateClockwise() { this.dir = this.rotatedClockwise(); return true; }
-
-    rotatedAntiClockwise() { return this.dir < 0 ? 3 : this.dir - 1; }
-    rotateAntiClockwise() { this.dir = this.rotatedAntiClockwise(); return true; }
-
     incrementedX(grid) { return this.x >= grid.width - 1 ? 0 : this.x + 1; }
     incrementX(grid, sourceCell) {
         const newX = this.incrementedX(grid);

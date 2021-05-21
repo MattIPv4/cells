@@ -1,4 +1,3 @@
-import { Cell } from './Cell';
 import { DirectionalCell } from './DirectionalCell';
 
 export class PusherCell extends DirectionalCell {
@@ -30,21 +29,45 @@ export class PusherCell extends DirectionalCell {
         return super.decrementY(grid, sourceCell);
     }
 
-    // The pusher cell moves itself and other cells
+    // The pusher cell moves other cells
     update(grid) {
         switch (this.dir) {
             case 0:
-                this.decrementY(grid, this);
+                this.pushNegativeY(grid);
                 break;
             case 1:
-                this.incrementX(grid, this);
+                this.pushPositiveX(grid);
                 break;
             case 2:
-                this.incrementY(grid, this);
+                this.pushPositiveY(grid);
                 break;
             case 3:
-                this.decrementX(grid, this);
+                this.pushNegativeX(grid);
                 break;
         }
+    }
+
+    pushPositiveX(grid) {
+        const targetCell = grid.cellAt(this.incrementedX(grid), this.y)
+        if (!targetCell) return false;
+        targetCell.incrementX(grid, this);
+    }
+
+    pushNegativeX(grid) {
+        const targetCell = grid.cellAt(this.decrementedX(grid), this.y)
+        if (!targetCell) return false;
+        targetCell.decrementX(grid, this);
+    }
+
+    pushPositiveY(grid) {
+        const targetCell = grid.cellAt(this.x, this.incrementedY(grid))
+        if (!targetCell) return false;
+        targetCell.incrementY(grid, this);
+    }
+
+    pushNegativeY(grid) {
+        const targetCell = grid.cellAt(this.x, this.decrementedY(grid))
+        if (!targetCell) return false;
+        targetCell.decrementY(grid, this);
     }
 }

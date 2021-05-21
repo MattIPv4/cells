@@ -3,7 +3,7 @@ import { DirectionalCell } from './DirectionalCell';
 export class DuplicatorCell extends DirectionalCell {
     constructor(x = 0, y = 0, dir = 0) {
         super(x, y, dir);
-        this.color = 'rgb(200, 180, 20)';
+        this.color = 'rgb(200, 150, 20)';
     }
 
     update(grid) {

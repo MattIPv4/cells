@@ -31,8 +31,17 @@ export class Game {
     }
 
     render() {
-        // Update cells
-        for (const cell of this.grid.cells) {
+        // Define the priority order for cell type updates
+        const order = [
+            // These update the cell with them at the end of the last cycle
+            'DuplicatorCell', 'RotatorCell',
+            // These update the cell with them now
+            'PusherCell', 'MoverCell', 'DestroyerCell'
+        ];
+        const orderSort = (a, b) => order.indexOf(a.constructor.name) > order.indexOf(b.constructor.name) ? 1 : -1;
+
+        // Update cells by type
+        for (const cell of [...this.grid.cells.values()].sort(orderSort)) {
             cell.update(this.grid);
         }
 

@@ -26,4 +26,10 @@ export class DirectionalCell extends Cell {
 
         game.ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
+
+    rotatedClockwise() { return this.dir >= 3 ? 0 : this.dir + 1; }
+    rotateClockwise() { this.dir = this.rotatedClockwise(); return true; }
+
+    rotatedAntiClockwise() { return this.dir < 0 ? 3 : this.dir - 1; }
+    rotateAntiClockwise() { this.dir = this.rotatedAntiClockwise(); return true; }
 }

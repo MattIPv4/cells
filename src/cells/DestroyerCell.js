@@ -1,4 +1,3 @@
-import { Cell } from './Cell';
 import { DirectionalCell } from './DirectionalCell';
 
 export class DestroyerCell extends DirectionalCell {
