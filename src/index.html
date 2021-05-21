@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,
+        body,
+        canvas {
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            box-sizing: border-box;
+            display: block;
+            width: 100%;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        import { Game } from './Game';
+        import { Grid } from './Grid';
+
+        import { Cell } from './cells/Cell';
+        import { RotatorCell } from './cells/RotatorCell';
+        import { ImmovableCell } from './cells/ImmovableCell';
+        import { PusherCell } from './cells/PusherCell';
+        import { DuplicatorCell } from './cells/DuplicatorCell';
+        import { DestroyerCell } from './cells/DestroyerCell';
+
+        new Game(new Grid(40, 20, new Set([
+            new Cell(4, 5),
+            new ImmovableCell(8, 5),
+            new PusherCell(10, 5, 1),
+            new Cell(15, 5),
+
+            new Cell(14, 2),
+            new DuplicatorCell(15, 2, 1),
+
+            new DestroyerCell(12, 1, 2),
+
+            new RotatorCell(5, 6),
+            new DuplicatorCell(15, 7, 2),
+        ])));
+    </script>
+</body>
+</html>
