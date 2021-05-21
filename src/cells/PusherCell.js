@@ -6,6 +6,30 @@ export class PusherCell extends Cell {
         this.color = 'rgb(20, 100, 200)';
     }
 
+    // A pusher cell can only be pushed in a direction not opposite to it
+    movementDirCheck(grid, sourceCell) { return sourceCell.dir !== this.dir && sourceCell.dir % 2 === this.dir % 2 }
+
+    incrementX(grid, sourceCell) {
+        if (this.movementDirCheck(grid, sourceCell)) return false;
+        return super.incrementX(grid, sourceCell);
+    }
+
+    decrementX(grid, sourceCell) {
+        if (this.movementDirCheck(grid, sourceCell)) return false;
+        return super.decrementX(grid, sourceCell);
+    }
+
+    incrementY(grid, sourceCell) {
+        if (this.movementDirCheck(grid, sourceCell)) return false;
+        return super.incrementY(grid, sourceCell);
+    }
+
+    decrementY(grid, sourceCell) {
+        if (this.movementDirCheck(grid, sourceCell)) return false;
+        return super.decrementY(grid, sourceCell);
+    }
+
+    // The pusher cell moves itself and other cells
     update(grid) {
         switch (this.dir) {
             case 0:
