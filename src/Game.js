@@ -129,6 +129,40 @@ export class Game {
         this.ctx.lineWidth = size * 0.1;
         this.ctx.strokeStyle = 'rgba(200, 10, 100, 0.75)';
         this.ctx.stroke();
+
+        // Render instruction text
+        const fontSize = 14;
+        this.ctx.fillStyle = 'rgba(250, 250, 255, 0.75)';
+        this.ctx.font = `400 ${fontSize}px monospace`;
+        const lineHeight = 1.2;
+        const lines = [
+            'Escape: Destroy all cells',
+            'Backspace: Destroy current cell',
+            'R: Rotate current cell',
+            'WASD: Move current cell',
+            '',
+            'Space: Pause/Unpause simulation',
+            'ArrowUp: Increase simulation speed (2x)',
+            'ArrowDown: Decrease simulation speed (0.5x)',
+            `Current speed: ${this.tps.toLocaleString()} TPS${this.doUpdate ? '' : ' (Paused)'} | ${this.fps.toLocaleString()} FPS`,
+            '',
+            `Insert cells: ${Array(cells.length).fill(null).map((_, i) => `${(i + 1).toLocaleString()}:    `).join('')}`,
+        ];
+        let y = this.canvas.height - fontSize * lineHeight;
+        for (const line of lines.reverse()) {
+            this.ctx.fillText(line, fontSize * lineHeight, y);
+            y -= fontSize * lineHeight;
+        }
+
+        // Render instruction cells
+        const cellSize = fontSize * 1.75;
+        const cellY = (this.canvas.height - fontSize * lineHeight * 2) / cellSize;
+        const char = this.ctx.measureText(' ').width;
+        const cellOffset = 18 * char;
+        for (let x = 0; x < cells.length; x++) {
+            const cellInstance = new cells[x]((x * char * 6 + cellOffset) / cellSize, cellY);
+            cellInstance.render(this, cellSize);
+        }
     }
 
     renderLoop() {
@@ -144,13 +178,11 @@ export class Game {
     mouseMove(event) {
         const canvasSize = this.canvas.getBoundingClientRect();
         const size = Math.min(canvasSize.width / this.grid.width, canvasSize.height / this.grid.height);
-        this.mouse.x = Math.floor((event.clientX - canvasSize.left) / size);
-        this.mouse.y = Math.floor((event.clientY - canvasSize.top) / size);
+        this.mouse.x = Math.min(Math.max(Math.floor((event.clientX - canvasSize.left) / size), 0), this.grid.width - 1);
+        this.mouse.y = Math.min(Math.max(Math.floor((event.clientY - canvasSize.top) / size), 0), this.grid.height - 1);
     }
 
     keyDown(event) {
-        console.log(event.key);
-
         switch (event.key) {
             case '1':
             case '2':
@@ -167,6 +199,11 @@ export class Game {
                 break;
             }
 
+            case 'Escape': {
+                this.grid.cells.clear();
+                break;
+            }
+
             case 'Backspace': {
                 const collisionCell = this.grid.cellAt(this.mouse.x, this.mouse.y);
                 if (collisionCell) this.grid.cells.delete(collisionCell);
@@ -177,6 +214,30 @@ export class Game {
                 const collisionCell = this.grid.cellAt(this.mouse.x, this.mouse.y);
                 if (collisionCell && typeof collisionCell.rotateClockwise === 'function')
                     collisionCell.rotateClockwise();
+                break;
+            }
+
+            case 'w': {
+                const collisionCell = this.grid.cellAt(this.mouse.x, this.mouse.y);
+                if (collisionCell && collisionCell.decrementY(this.grid, collisionCell)) this.mouse.y = collisionCell.y;
+                break;
+            }
+
+            case 'a': {
+                const collisionCell = this.grid.cellAt(this.mouse.x, this.mouse.y);
+                if (collisionCell && collisionCell.decrementX(this.grid, collisionCell)) this.mouse.x = collisionCell.x;
+                break;
+            }
+
+            case 's': {
+                const collisionCell = this.grid.cellAt(this.mouse.x, this.mouse.y);
+                if (collisionCell && collisionCell.incrementY(this.grid, collisionCell)) this.mouse.y = collisionCell.y;
+                break;
+            }
+
+            case 'd': {
+                const collisionCell = this.grid.cellAt(this.mouse.x, this.mouse.y);
+                if (collisionCell && collisionCell.incrementX(this.grid, collisionCell)) this.mouse.x = collisionCell.x;
                 break;
             }
 
