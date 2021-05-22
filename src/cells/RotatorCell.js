@@ -43,7 +43,7 @@ export class RotatorCell extends Cell {
             grid.cellAt(this.x + 1, this.y),
         ];
         for (const cell of neighbours) {
-            if (cell && (cell instanceof DirectionalCell || cell instanceof RotatorCell)) {
+            if (cell && typeof cell.rotateClockwise === 'function') {
                 if (this.antiClockwise) cell.rotateAntiClockwise();
                 else cell.rotateClockwise();
             }
