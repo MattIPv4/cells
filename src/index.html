@@ -33,7 +33,7 @@
         import { DuplicatorCell } from './cells/DuplicatorCell';
         import { DestroyerCell } from './cells/DestroyerCell';
 
-        new Game(new Grid(40, 20, new Set([
+        new Game(new Grid(80, 40, new Set([
             new Cell(4, 5),
             new ImmovableCell(8, 5),
             new MoverCell(13, 5, 1),
@@ -57,7 +57,7 @@
             new RotatorCell(33, 14),
             new RotatorCell(34, 17),
             new RotatorCell(31, 18),
-        ])), 10);
+        ])), 10, 30);
     </script>
 </body>
 </html>

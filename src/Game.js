@@ -24,8 +24,8 @@ CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
 }
 
 export class Game {
-    BORDER_RADIUS = 4;
-    GRID_GAP = 4;
+    BORDER_RADIUS = 0.1;
+    GRID_GAP = 0.05;
 
     constructor(grid, tps = 5, fps = 60) {
         this.grid = grid;
@@ -44,9 +44,11 @@ export class Game {
 
         this.doUpdate = true;
         this.lastUpdate = 0;
+        this.lastUpdateDelay = 0;
         this.tps = tps;
 
         this.lastRender = 0;
+        this.lastRenderDelay = 0;
         this.fps = fps;
 
         window.requestAnimationFrame(this.updateLoop.bind(this));
@@ -74,10 +76,11 @@ export class Game {
     updateLoop() {
         this.lastUpdate = Date.now();
         this.update();
+        this.lastUpdateDelay = (1000 / this.tps) - (Date.now() - this.lastUpdate);
 
         setTimeout(
             () => window.requestAnimationFrame(this.updateLoop.bind(this)),
-            (1000 / this.tps) - (Date.now() - this.lastUpdate),
+            this.lastUpdateDelay,
         );
     }
 
@@ -99,11 +102,11 @@ export class Game {
             for (let x = 0; x < this.grid.width; x++) {
                 this.ctx.beginPath();
                 this.ctx.roundRect(
-                    x * size + this.GRID_GAP,
-                    y * size + this.GRID_GAP,
-                    size - this.GRID_GAP * 2,
-                    size - this.GRID_GAP * 2,
-                    this.BORDER_RADIUS,
+                    x * size + size * this.GRID_GAP,
+                    y * size + size * this.GRID_GAP,
+                    size - size * this.GRID_GAP * 2,
+                    size - size * this.GRID_GAP * 2,
+                    size * this.BORDER_RADIUS,
                 );
                 this.ctx.fillStyle = 'rgb(30, 30, 40)';
                 this.ctx.fill();
@@ -122,11 +125,11 @@ export class Game {
             this.mouse.y * size,
             size,
             size,
-            this.BORDER_RADIUS,
+            size * this.BORDER_RADIUS,
         );
         this.ctx.fillStyle = 'rgba(200, 10, 100, 0.5)';
         this.ctx.fill();
-        this.ctx.lineWidth = size * 0.1;
+        this.ctx.lineWidth = size * this.GRID_GAP * 2;
         this.ctx.strokeStyle = 'rgba(200, 10, 100, 0.75)';
         this.ctx.stroke();
 
@@ -144,7 +147,7 @@ export class Game {
             'Space: Pause/Unpause simulation',
             'ArrowUp: Increase simulation speed (2x)',
             'ArrowDown: Decrease simulation speed (0.5x)',
-            `Current speed: ${this.tps.toLocaleString()} TPS${this.doUpdate ? '' : ' (Paused)'} | ${this.fps.toLocaleString()} FPS`,
+            `Current speed: ${this.tps.toLocaleString()} TPS${this.doUpdate ? '' : ' (Paused)'}${this.lastUpdateDelay < 0 ? ` (Lagging ${this.lastUpdateDelay.toLocaleString()}ms)` : ''} | ${this.fps.toLocaleString()} FPS${this.lastRenderDelay < 0 ? ` (Lagging ${this.lastRenderDelay.toLocaleString()}ms)` : ''}`,
             '',
             `Insert cells: ${Array(cells.length).fill(null).map((_, i) => `${(i + 1).toLocaleString()}:    `).join('')}`,
         ];
@@ -168,10 +171,11 @@ export class Game {
     renderLoop() {
         this.lastRender = Date.now();
         this.render();
+        this.lastRenderDelay = (1000 / this.fps) - (Date.now() - this.lastRender);
 
         setTimeout(
             () => window.requestAnimationFrame(this.renderLoop.bind(this)),
-            (1000 / this.fps) - (Date.now() - this.lastRender),
+            this.lastRenderDelay,
         );
     }
 

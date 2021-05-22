@@ -16,7 +16,7 @@ export class Cell {
             this.y * size,
             size,
             size,
-            game.BORDER_RADIUS,
+            size * game.BORDER_RADIUS,
         );
         game.ctx.fillStyle = this.color;
         game.ctx.fill();
