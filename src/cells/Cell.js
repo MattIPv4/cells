@@ -27,7 +27,7 @@ export class Cell {
     }
 
     incrementedX(grid) { return this.x >= grid.width - 1 ? 0 : this.x + 1; }
-    incrementX(grid, sourceCell) {
+    incrementX(grid, sourceCell, ...args) {
         const newX = this.incrementedX(grid);
 
         // If hitting source cell, abort
@@ -35,14 +35,14 @@ export class Cell {
 
         // If this cell moving will collide with another, move it too
         const collisionCell = grid.cellAt(newX, this.y);
-        if (collisionCell && !collisionCell.incrementX(grid, sourceCell)) return false;
+        if (collisionCell && !collisionCell.incrementX(grid, sourceCell, ...args)) return false;
 
         this.x = newX;
         return true;
     }
 
-    decrementedX(grid) { return this.x < 0 ? grid.width - 1 : this.x - 1; }
-    decrementX(grid, sourceCell) {
+    decrementedX(grid) { return this.x <= 0 ? grid.width - 1 : this.x - 1; }
+    decrementX(grid, sourceCell, ...args) {
         const newX = this.decrementedX(grid);
 
         // If hitting source cell, abort
@@ -50,14 +50,14 @@ export class Cell {
 
         // If this cell moving will collide with another, move it too
         const collisionCell = grid.cellAt(newX, this.y);
-        if (collisionCell && !collisionCell.decrementX(grid, sourceCell)) return false;
+        if (collisionCell && !collisionCell.decrementX(grid, sourceCell, ...args)) return false;
 
         this.x = newX;
         return true;
     }
 
-    incrementedY(grid) { return this.y === grid.height - 1 ? 0 : this.y + 1; }
-    incrementY(grid, sourceCell) {
+    incrementedY(grid) { return this.y >= grid.height - 1 ? 0 : this.y + 1; }
+    incrementY(grid, sourceCell, ...args) {
         const newY = this.incrementedY(grid);
 
         // If hitting source cell, abort
@@ -65,14 +65,14 @@ export class Cell {
 
         // If this cell moving will collide with another, move it too
         const collisionCell = grid.cellAt(this.x, newY);
-        if (collisionCell && !collisionCell.incrementY(grid, sourceCell)) return false;
+        if (collisionCell && !collisionCell.incrementY(grid, sourceCell, ...args)) return false;
 
         this.y = newY;
         return true;
     }
 
-    decrementedY(grid) { return this.y === 0 ? grid.height - 1 : this.y - 1; }
-    decrementY(grid, sourceCell) {
+    decrementedY(grid) { return this.y <= 0 ? grid.height - 1 : this.y - 1; }
+    decrementY(grid, sourceCell, ...args) {
         const newY = this.decrementedY(grid);
 
         // If hitting source cell, abort
@@ -80,7 +80,7 @@ export class Cell {
 
         // If this cell moving will collide with another, move it too
         const collisionCell = grid.cellAt(this.x, newY);
-        if (collisionCell && !collisionCell.decrementY(grid, sourceCell)) return false;
+        if (collisionCell && !collisionCell.decrementY(grid, sourceCell, ...args)) return false;
 
         this.y = newY;
         return true;

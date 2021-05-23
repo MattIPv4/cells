@@ -6,27 +6,45 @@ export class PusherCell extends DirectionalCell {
         this.color = 'rgb(20, 100, 200)';
     }
 
-    // A pusher cell can only be pushed in a direction not opposite to it
-    movementDirCheck(grid, sourceCell) { return sourceCell.dir !== this.dir && sourceCell.dir % 2 === this.dir % 2; }
+    opposingForceCheck(grid, sourceCell, pushingCells) {
+        // Add this cell to the pushing cells
+        pushingCells[this.dir]++;
 
-    incrementX(grid, sourceCell) {
-        if (this.movementDirCheck(grid, sourceCell)) return false;
-        return super.incrementX(grid, sourceCell);
+        // Calculate the opposing direction to this cell
+        const oppositeDir = (this.dir + 2) % 4;
+
+        // If this cell is the opposite direction to the source, check push forces
+        if (sourceCell.dir === oppositeDir) {
+            // If the forces are in favour of the source cell, this cell can move
+            return pushingCells[sourceCell.dir] > pushingCells[this.dir];
+        }
+
+        // This cell isn't in an opposing direction, it can be moved
+        return true;
     }
 
-    decrementX(grid, sourceCell) {
-        if (this.movementDirCheck(grid, sourceCell)) return false;
-        return super.decrementX(grid, sourceCell);
+    incrementX(grid, sourceCell, pushingCells = null) {
+        pushingCells = pushingCells || this.pushEmptyForce();
+        if (!this.opposingForceCheck(grid, sourceCell, pushingCells)) return false;
+        return super.incrementX(grid, sourceCell, pushingCells);
     }
 
-    incrementY(grid, sourceCell) {
-        if (this.movementDirCheck(grid, sourceCell)) return false;
-        return super.incrementY(grid, sourceCell);
+    decrementX(grid, sourceCell, pushingCells = null) {
+        pushingCells = pushingCells || this.pushEmptyForce();
+        if (!this.opposingForceCheck(grid, sourceCell, pushingCells)) return false;
+        return super.decrementX(grid, sourceCell, pushingCells);
     }
 
-    decrementY(grid, sourceCell) {
-        if (this.movementDirCheck(grid, sourceCell)) return false;
-        return super.decrementY(grid, sourceCell);
+    incrementY(grid, sourceCell, pushingCells = null) {
+        pushingCells = pushingCells || this.pushEmptyForce();
+        if (!this.opposingForceCheck(grid, sourceCell, pushingCells)) return false;
+        return super.incrementY(grid, sourceCell, pushingCells);
+    }
+
+    decrementY(grid, sourceCell, pushingCells = null) {
+        pushingCells = pushingCells || this.pushEmptyForce();
+        if (!this.opposingForceCheck(grid, sourceCell, pushingCells)) return false;
+        return super.decrementY(grid, sourceCell, pushingCells);
     }
 
     // The pusher cell moves other cells
@@ -47,27 +65,35 @@ export class PusherCell extends DirectionalCell {
         }
     }
 
+    pushEmptyForce() {
+        return { 0: 0, 1: 0, 2: 0, 3: 0 };
+    }
+
+    pushInitialForce() {
+        return Object.assign(this.pushEmptyForce(), { [this.dir]: 1 });
+    }
+
     pushPositiveX(grid) {
         const targetCell = grid.cellAt(this.incrementedX(grid), this.y)
         if (!targetCell) return false;
-        targetCell.incrementX(grid, this);
+        targetCell.incrementX(grid, this, this.pushInitialForce());
     }
 
     pushNegativeX(grid) {
         const targetCell = grid.cellAt(this.decrementedX(grid), this.y)
         if (!targetCell) return false;
-        targetCell.decrementX(grid, this);
+        targetCell.decrementX(grid, this, this.pushInitialForce());
     }
 
     pushPositiveY(grid) {
         const targetCell = grid.cellAt(this.x, this.incrementedY(grid))
         if (!targetCell) return false;
-        targetCell.incrementY(grid, this);
+        targetCell.incrementY(grid, this, this.pushInitialForce());
     }
 
     pushNegativeY(grid) {
         const targetCell = grid.cellAt(this.x, this.decrementedY(grid))
         if (!targetCell) return false;
-        targetCell.decrementY(grid, this);
+        targetCell.decrementY(grid, this, this.pushInitialForce());
     }
 }
