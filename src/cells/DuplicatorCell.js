@@ -24,14 +24,32 @@ export class DuplicatorCell extends PusherCell {
         }
     }
 
+    opposingForceCheck(grid, sourceCell, pushingCells) {
+        // Duplicators don't contribute to opposing forces
+        return true;
+    }
+
     duplicateCell(grid, sourceCell) {
         const newCell = sourceCell.duplicate();
         grid.cells.add(newCell);
         return newCell;
     }
 
+    cellToDuplicate(grid) {
+        switch (this.dir) {
+            case 0:
+                return grid.cellAt(this.x, this.incrementedY(grid));
+            case 1:
+                return grid.cellAt(this.decrementedX(grid), this.y);
+            case 2:
+                return grid.cellAt(this.x, this.decrementedY(grid));
+            case 3:
+                return grid.cellAt(this.incrementedX(grid), this.y);
+        }
+    }
+
     duplicateToPositiveX(grid) {
-        const sourceCell = grid.cellAt(this.decrementedX(grid), this.y);
+        const sourceCell = this.cellToDuplicate(grid);
         if (!sourceCell) return false;
 
         // Attempt to push the cell that a new cell would collide with
@@ -42,7 +60,7 @@ export class DuplicatorCell extends PusherCell {
     }
 
     duplicateToNegativeX(grid) {
-        const sourceCell = grid.cellAt(this.incrementedX(grid), this.y);
+        const sourceCell = this.cellToDuplicate(grid);
         if (!sourceCell) return false;
 
         // Attempt to push the cell that a new cell would collide with
@@ -53,7 +71,7 @@ export class DuplicatorCell extends PusherCell {
     }
 
     duplicateToPositiveY(grid) {
-        const sourceCell = grid.cellAt(this.x, this.decrementedY(grid));
+        const sourceCell = this.cellToDuplicate(grid);
         if (!sourceCell) return false;
 
         // Attempt to push the cell that a new cell would collide with
@@ -64,7 +82,7 @@ export class DuplicatorCell extends PusherCell {
     }
 
     duplicateToNegativeY(grid) {
-        const sourceCell = grid.cellAt(this.x, this.incrementedY(grid));
+        const sourceCell = this.cellToDuplicate(grid);
         if (!sourceCell) return false;
 
         // Attempt to push the cell that a new cell would collide with

@@ -5,8 +5,18 @@ import { ImmovableCell } from './cells/ImmovableCell';
 import { MoverCell } from './cells/MoverCell';
 import { PusherCell } from './cells/PusherCell';
 import { RotatorCell } from './cells/RotatorCell';
+import { TranslocatorCell } from './cells/TranslocatorCell';
+import { VoidCell } from './cells/VoidCell';
+import { SuckerCell } from './cells/SuckerCell';
 
-const cells = [Cell, DestroyerCell, DuplicatorCell, ImmovableCell, MoverCell, PusherCell, RotatorCell];
+const cells = [
+    // These update the cell with them at the end of the last cycle
+    DuplicatorCell, TranslocatorCell, RotatorCell,
+    // These update the cell with them now
+    SuckerCell, PusherCell, MoverCell, DestroyerCell, VoidCell,
+    // These do nothing to the game
+    ImmovableCell, Cell
+];
 
 // Polyfill roundedRect
 // Thanks https://stackoverflow.com/a/7838871/5577674
@@ -59,12 +69,7 @@ export class Game {
         if (!this.doUpdate) return;
 
         // Define the priority order for cell type updates
-        const order = [
-            // These update the cell with them at the end of the last cycle
-            'DuplicatorCell', 'RotatorCell',
-            // These update the cell with them now
-            'PusherCell', 'MoverCell', 'DestroyerCell',
-        ];
+        const order = cells.map(cls => cls.name);
         const orderSort = (a, b) => order.indexOf(a.constructor.name) > order.indexOf(b.constructor.name) ? 1 : -1;
 
         // Update cells by type
@@ -149,7 +154,7 @@ export class Game {
             'ArrowDown: Decrease simulation speed (0.5x)',
             `Current speed: ${this.tps.toLocaleString()} TPS${this.doUpdate ? '' : ' (Paused)'}${this.lastUpdateDelay < 0 ? ` (Lagging ${this.lastUpdateDelay.toLocaleString()}ms)` : ''} | ${this.fps.toLocaleString()} FPS${this.lastRenderDelay < 0 ? ` (Lagging ${this.lastRenderDelay.toLocaleString()}ms)` : ''}`,
             '',
-            `Insert cells: ${Array(cells.length).fill(null).map((_, i) => `${(i + 1).toLocaleString()}:    `).join('')}`,
+            `Insert cells: ${Array(cells.length).fill(null).map((_, i) => `${i.toLocaleString()}:    `).join('')}`,
         ];
         let y = this.canvas.height - fontSize * lineHeight;
         for (const line of lines.reverse()) {
@@ -188,16 +193,19 @@ export class Game {
 
     keyDown(event) {
         switch (event.key) {
+            case '0':
             case '1':
             case '2':
             case '3':
             case '4':
             case '5':
             case '6':
-            case '7': {
+            case '7':
+            case '8':
+            case '9': {
                 const collisionCell = this.grid.cellAt(this.mouse.x, this.mouse.y);
                 if (!collisionCell) {
-                    const cell = cells[parseInt(event.key, 10) - 1];
+                    const cell = cells[parseInt(event.key, 10)];
                     this.grid.cells.add(new cell(this.mouse.x, this.mouse.y));
                 }
                 break;

@@ -27,11 +27,13 @@
 
         import { Cell } from './cells/Cell';
         import { RotatorCell } from './cells/RotatorCell';
+        import { TranslocatorCell } from './cells/TranslocatorCell';
         import { ImmovableCell } from './cells/ImmovableCell';
         import { PusherCell } from './cells/PusherCell';
         import { MoverCell } from './cells/MoverCell';
         import { DuplicatorCell } from './cells/DuplicatorCell';
         import { DestroyerCell } from './cells/DestroyerCell';
+        import { VoidCell } from './cells/VoidCell';
 
         new Game(new Grid(80, 40, new Set([
             new Cell(4, 5),
@@ -47,7 +49,8 @@
             new DestroyerCell(12, 4, 2),
 
             new RotatorCell(5, 6, false),
-            new DuplicatorCell(15, 7, 2),
+            new DuplicatorCell(15, 6, 2),
+            new RotatorCell(5, 8, false),
 
             new RotatorCell(20, 12, false),
             new RotatorCell(20, 13, true),
@@ -57,6 +60,12 @@
             new RotatorCell(33, 14),
             new RotatorCell(34, 17),
             new RotatorCell(31, 18),
+
+            new TranslocatorCell(40, 20),
+            new Cell(40, 21),
+
+            new VoidCell(50, 25),
+            new VoidCell(52, 25),
         ])), 10, 30);
     </script>
 </body>
