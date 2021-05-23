@@ -1,4 +1,73 @@
+import { Cell } from './Cell';
 import { DirectionalCell } from './DirectionalCell';
+
+const originalIncrementX = Cell.prototype.incrementX;
+Cell.prototype.incrementX = function (grid, sourceCell, pushingCells, ...args) {
+    const newX = this.incrementedX(grid);
+
+    // If we've reached the source cell, check to see if there if a remaining push force
+    if (newX === sourceCell.x && pushingCells) {
+        if (pushingCells[sourceCell.dir] > pushingCells[(sourceCell.dir + 2) % 4]) {
+            // Apply the new position but don't recurse further
+            this.x = newX;
+            return true;
+        }
+        return false;
+    }
+
+    return originalIncrementX.call(this, grid, sourceCell, pushingCells, ...args);
+};
+
+const originalIncrementY = Cell.prototype.incrementY;
+Cell.prototype.incrementY = function (grid, sourceCell, pushingCells, ...args) {
+    const newY = this.incrementedY(grid);
+
+    // If we've reached the source cell, check to see if there if a remaining push force
+    if (newY === sourceCell.y && pushingCells) {
+        if (pushingCells[sourceCell.dir] > pushingCells[(sourceCell.dir + 2) % 4]) {
+            // Apply the new position but don't recurse further
+            this.y = newY;
+            return true;
+        }
+        return false;
+    }
+
+    return originalIncrementY.call(this, grid, sourceCell, pushingCells, ...args);
+};
+
+const originalDecrementX = Cell.prototype.decrementX;
+Cell.prototype.decrementX = function (grid, sourceCell, pushingCells, ...args) {
+    const newX = this.decrementedX(grid);
+
+    // If we've reached the source cell, check to see if there if a remaining push force
+    if (newX === sourceCell.x && pushingCells) {
+        if (pushingCells[sourceCell.dir] > pushingCells[(sourceCell.dir + 2) % 4]) {
+            // Apply the new position but don't recurse further
+            this.x = newX;
+            return true;
+        }
+        return false;
+    }
+
+    return originalDecrementX.call(this, grid, sourceCell, pushingCells, ...args);
+};
+
+const originalDecrementY = Cell.prototype.decrementY;
+Cell.prototype.decrementY = function (grid, sourceCell, pushingCells, ...args) {
+    const newY = this.decrementedY(grid);
+
+    // If we've reached the source cell, check to see if there if a remaining push force
+    if (newY === sourceCell.y && pushingCells) {
+        if (pushingCells[sourceCell.dir] > pushingCells[(sourceCell.dir + 2) % 4]) {
+            // Apply the new position but don't recurse further
+            this.y = newY;
+            return true;
+        }
+        return false;
+    }
+
+    return originalDecrementY.call(this, grid, sourceCell, pushingCells, ...args);
+};
 
 export class PusherCell extends DirectionalCell {
     constructor(x = 0, y = 0, dir = 0) {
