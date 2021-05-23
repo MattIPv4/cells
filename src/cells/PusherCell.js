@@ -144,25 +144,25 @@ export class PusherCell extends DirectionalCell {
 
     pushPositiveX(grid) {
         const targetCell = grid.cellAt(this.incrementedX(grid), this.y)
-        if (!targetCell) return false;
-        targetCell.incrementX(grid, this, this.pushInitialForce());
+        if (!targetCell) return true;
+        return targetCell.incrementX(grid, this, this.pushInitialForce());
     }
 
     pushNegativeX(grid) {
         const targetCell = grid.cellAt(this.decrementedX(grid), this.y)
-        if (!targetCell) return false;
-        targetCell.decrementX(grid, this, this.pushInitialForce());
+        if (!targetCell) return true;
+        return targetCell.decrementX(grid, this, this.pushInitialForce());
     }
 
     pushPositiveY(grid) {
         const targetCell = grid.cellAt(this.x, this.incrementedY(grid))
-        if (!targetCell) return false;
-        targetCell.incrementY(grid, this, this.pushInitialForce());
+        if (!targetCell) return true;
+        return targetCell.incrementY(grid, this, this.pushInitialForce());
     }
 
     pushNegativeY(grid) {
         const targetCell = grid.cellAt(this.x, this.decrementedY(grid))
-        if (!targetCell) return false;
-        targetCell.decrementY(grid, this, this.pushInitialForce());
+        if (!targetCell) return true;
+        return targetCell.decrementY(grid, this, this.pushInitialForce());
     }
 }
